@@ -60,26 +60,26 @@ diagnosticMode:
   args:
     - infinity
 
-## @section %%MAIN_CONTAINER%% Parameters
+## @section Admission Parameters
 ##
 
-## %%MAIN_CONTAINER/POD_DESCRIPTION%%
+## Admission Validating Admission Webhook deployment that registers every image
 ##
-%%MAIN_OBJECT_BLOCK%%:
-  ## Bitnami %%MAIN_CONTAINER%% image
-  ## ref: https://hub.docker.com/r/bitnami/%%IMAGE_NAME%%/tags/
-  ## @param %%MAIN_OBJECT_BLOCK%%.image.registry %%MAIN_CONTAINER%% image registry
-  ## @param %%MAIN_OBJECT_BLOCK%%.image.repository %%MAIN_CONTAINER%% image repository
-  ## @param %%MAIN_OBJECT_BLOCK%%.image.tag %%MAIN_CONTAINER%% image tag (immutable tags are recommended)
-  ## @param %%MAIN_OBJECT_BLOCK%%.image.digest %%MAIN_CONTAINER%% image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag image tag (immutable tags are recommended)
-  ## @param %%MAIN_OBJECT_BLOCK%%.image.pullPolicy %%MAIN_CONTAINER%% image pull policy
-  ## @param %%MAIN_OBJECT_BLOCK%%.image.pullSecrets %%MAIN_CONTAINER%% image pull secrets
-  ## @param %%MAIN_OBJECT_BLOCK%%.image.debug Enable %%MAIN_CONTAINER%% image debug mode
+admission:
+  ## Admission image
+  ## ref: https://github.com/ImperialOps/airgap-webhook/pkgs/container/airgap-webhook/versions
+  ## @param admission.image.registry Admission image registry
+  ## @param admission.image.repository Admission image repository
+  ## @param admission.image.tag Admission image tag (immutable tags are recommended)
+  ## @param admission.image.digest Admission image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag image tag (immutable tags are recommended)
+  ## @param admission.image.pullPolicy Admission image pull policy
+  ## @param admission.image.pullSecrets Admission image pull secrets
+  ## @param admission.image.debug Enable Admission image debug mode
   ##
   image:
-    registry: docker.io
-    repository: bitnami/%%IMAGE_NAME%%
-    tag: %%IMAGE_TAG%%
+    registry: ghcr.io
+    repository: imperialops/airgap-webhook
+    tag: "latest"
     digest: ""
     ## Specify a imagePullPolicy
     ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -97,90 +97,88 @@ diagnosticMode:
     ## Enable debug mode
     ##
     debug: false
-  ## @param %%MAIN_OBJECT_BLOCK%%.replicaCount Number of %%MAIN_CONTAINER_NAME%% replicas to deploy
+  ## @param admission.replicaCount Number of admission replicas to deploy
   ##
   replicaCount: 1
-  ## @param %%MAIN_OBJECT_BLOCK%%.containerPorts.http %%MAIN_CONTAINER_NAME%% HTTP container port
-  ## @param %%MAIN_OBJECT_BLOCK%%.containerPorts.https %%MAIN_CONTAINER_NAME%% HTTPS container port
+  ## @param admission.containerPorts.webhook admission HTTPS container port for Validation Webhook
   ##
   containerPorts:
-    http: 80
-    https: 443
-  ## Configure extra options for %%MAIN_CONTAINER_NAME%% containers' liveness and readiness probes
+    webhook: 8080
+  ## Configure extra options for admission containers' liveness and readiness probes
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
-  ## @param %%MAIN_OBJECT_BLOCK%%.livenessProbe.enabled Enable livenessProbe on %%MAIN_CONTAINER_NAME%% containers
-  ## @param %%MAIN_OBJECT_BLOCK%%.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
-  ## @param %%MAIN_OBJECT_BLOCK%%.livenessProbe.periodSeconds Period seconds for livenessProbe
-  ## @param %%MAIN_OBJECT_BLOCK%%.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
-  ## @param %%MAIN_OBJECT_BLOCK%%.livenessProbe.failureThreshold Failure threshold for livenessProbe
-  ## @param %%MAIN_OBJECT_BLOCK%%.livenessProbe.successThreshold Success threshold for livenessProbe
+  ## @param admission.livenessProbe.enabled Enable livenessProbe on admission containers
+  ## @param admission.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
+  ## @param admission.livenessProbe.periodSeconds Period seconds for livenessProbe
+  ## @param admission.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
+  ## @param admission.livenessProbe.failureThreshold Failure threshold for livenessProbe
+  ## @param admission.livenessProbe.successThreshold Success threshold for livenessProbe
   ##
   livenessProbe:
     enabled: true
-    initialDelaySeconds: foo
-    periodSeconds: bar
-    timeoutSeconds: foo
-    failureThreshold: bar
-    successThreshold: foo
-  ## @param %%MAIN_OBJECT_BLOCK%%.readinessProbe.enabled Enable readinessProbe on %%MAIN_CONTAINER_NAME%% containers
-  ## @param %%MAIN_OBJECT_BLOCK%%.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
-  ## @param %%MAIN_OBJECT_BLOCK%%.readinessProbe.periodSeconds Period seconds for readinessProbe
-  ## @param %%MAIN_OBJECT_BLOCK%%.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
-  ## @param %%MAIN_OBJECT_BLOCK%%.readinessProbe.failureThreshold Failure threshold for readinessProbe
-  ## @param %%MAIN_OBJECT_BLOCK%%.readinessProbe.successThreshold Success threshold for readinessProbe
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 1
+    failureThreshold: 3
+    successThreshold: 1
+  ## @param admission.readinessProbe.enabled Enable readinessProbe on admission containers
+  ## @param admission.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
+  ## @param admission.readinessProbe.periodSeconds Period seconds for readinessProbe
+  ## @param admission.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
+  ## @param admission.readinessProbe.failureThreshold Failure threshold for readinessProbe
+  ## @param admission.readinessProbe.successThreshold Success threshold for readinessProbe
   ##
   readinessProbe:
     enabled: true
-    initialDelaySeconds: foo
-    periodSeconds: bar
-    timeoutSeconds: foo
-    failureThreshold: bar
-    successThreshold: foo
-  ## @param %%MAIN_OBJECT_BLOCK%%.startupProbe.enabled Enable startupProbe on %%MAIN_CONTAINER_NAME%% containers
-  ## @param %%MAIN_OBJECT_BLOCK%%.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
-  ## @param %%MAIN_OBJECT_BLOCK%%.startupProbe.periodSeconds Period seconds for startupProbe
-  ## @param %%MAIN_OBJECT_BLOCK%%.startupProbe.timeoutSeconds Timeout seconds for startupProbe
-  ## @param %%MAIN_OBJECT_BLOCK%%.startupProbe.failureThreshold Failure threshold for startupProbe
-  ## @param %%MAIN_OBJECT_BLOCK%%.startupProbe.successThreshold Success threshold for startupProbe
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 1
+    failureThreshold: 3
+    successThreshold: 1
+  ## @param admission.startupProbe.enabled Enable startupProbe on admission containers
+  ## @param admission.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
+  ## @param admission.startupProbe.periodSeconds Period seconds for startupProbe
+  ## @param admission.startupProbe.timeoutSeconds Timeout seconds for startupProbe
+  ## @param admission.startupProbe.failureThreshold Failure threshold for startupProbe
+  ## @param admission.startupProbe.successThreshold Success threshold for startupProbe
   ##
   startupProbe:
     enabled: false
-    initialDelaySeconds: foo
-    periodSeconds: bar
-    timeoutSeconds: foo
-    failureThreshold: bar
-    successThreshold: foo
-  ## @param %%MAIN_OBJECT_BLOCK%%.customLivenessProbe Custom livenessProbe that overrides the default one
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 1
+    failureThreshold: 3
+    successThreshold: 1
+  ## @param admission.customLivenessProbe Custom livenessProbe that overrides the default one
   ##
   customLivenessProbe: {}
-  ## @param %%MAIN_OBJECT_BLOCK%%.customReadinessProbe Custom readinessProbe that overrides the default one
+  ## @param admission.customReadinessProbe Custom readinessProbe that overrides the default one
   ##
   customReadinessProbe: {}
-  ## @param %%MAIN_OBJECT_BLOCK%%.customStartupProbe Custom startupProbe that overrides the default one
+  ## @param admission.customStartupProbe Custom startupProbe that overrides the default one
   ##
   customStartupProbe: {}
-  ## %%MAIN_CONTAINER_NAME%% resource requests and limits
+  ## admission resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
-  ## @param %%MAIN_OBJECT_BLOCK%%.resources.limits The resources limits for the %%MAIN_CONTAINER_NAME%% containers
-  ## @param %%MAIN_OBJECT_BLOCK%%.resources.requests The requested resources for the %%MAIN_CONTAINER_NAME%% containers
+  ## @param admission.resources.limits The resources limits for the admission containers
+  ## @param admission.resources.requests The requested resources for the admission containers
   ##
   resources:
     limits: {}
     requests: {}
   ## Configure Pods Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
-  ## @param %%MAIN_OBJECT_BLOCK%%.podSecurityContext.enabled Enabled %%MAIN_CONTAINER_NAME%% pods' Security Context
-  ## @param %%MAIN_OBJECT_BLOCK%%.podSecurityContext.fsGroup Set %%MAIN_CONTAINER_NAME%% pod's Security Context fsGroup
+  ## @param admission.podSecurityContext.enabled Enabled admission pods' Security Context
+  ## @param admission.podSecurityContext.fsGroup Set admission pod's Security Context fsGroup
   ##
   podSecurityContext:
     enabled: true
     fsGroup: 1001
   ## Configure Container Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
-  ## @param %%MAIN_OBJECT_BLOCK%%.containerSecurityContext.enabled Enabled %%MAIN_CONTAINER_NAME%% containers' Security Context
-  ## @param %%MAIN_OBJECT_BLOCK%%.containerSecurityContext.runAsUser Set %%MAIN_CONTAINER_NAME%% containers' Security Context runAsUser
-  ## @param %%MAIN_OBJECT_BLOCK%%.containerSecurityContext.runAsNonRoot Set %%MAIN_CONTAINER_NAME%% containers' Security Context runAsNonRoot
-  ## @param %%MAIN_OBJECT_BLOCK%%.containerSecurityContext.readOnlyRootFilesystem Set %%MAIN_CONTAINER_NAME%% containers' Security Context runAsNonRoot
+  ## @param admission.containerSecurityContext.enabled Enabled admission containers' Security Context
+  ## @param admission.containerSecurityContext.runAsUser Set admission containers' Security Context runAsUser
+  ## @param admission.containerSecurityContext.runAsNonRoot Set admission containers' Security Context runAsNonRoot
+  ## @param admission.containerSecurityContext.readOnlyRootFilesystem Set admission containers' Security Context runAsNonRoot
   ##
   containerSecurityContext:
     enabled: true
@@ -188,42 +186,60 @@ diagnosticMode:
     runAsNonRoot: true
     readOnlyRootFilesystem: false
 
-  %%OTHER_PARAMETERS_RELATED_TO_THIS_CONTAINER/POD%%
 
-  ## @param %%MAIN_OBJECT_BLOCK%%.existingConfigmap The name of an existing ConfigMap with your custom configuration for %%MAIN_CONTAINER_NAME%%
+  ## Configure Container Admission Webhook
+  ## ref: https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/
+  ## @param admissionWebhook.enabled Enabled admission containers' Validating Webhook
+  admissionWebhook:
+    enabled: true
+    failurePolicy: Ignore
+    port: 8080
+    certificate:
+      provided: false
+    ## Specifiy the secretName when the certificate is provided via a TLS secret
+    ## secretName: ""
+    ## Specifiy the CA bundle of the provided certificate.
+    ## This is a PEM encoded CA bundle which will be used to validate the webhook certificate. If unspecified, system trust roots on the apiserver are used.
+    ## caBundle:
+    ##   | Add the CA bundle content here.
+    service:
+      ## Specify custom labels for the validation webhook service.
+      labels: {}
+
+  ## @param admission.existingConfigmap The name of an existing ConfigMap with your custom configuration for admission
   ##
   existingConfigmap:
-  ## @param %%MAIN_OBJECT_BLOCK%%.command Override default container command (useful when using custom images)
+  ## @param admission.command Override default container command (useful when using custom images)
   ##
   command: []
-  ## @param %%MAIN_OBJECT_BLOCK%%.args Override default container args (useful when using custom images)
+  ## @param admission.args Override default container args (useful when using custom images)
   ##
   args: []
-  ## @param %%MAIN_OBJECT_BLOCK%%.hostAliases %%MAIN_CONTAINER_NAME%% pods host aliases
+  ## @param admission.hostAliases admission pods host aliases
   ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
   ##
   hostAliases: []
-  ## @param %%MAIN_OBJECT_BLOCK%%.podLabels Extra labels for %%MAIN_CONTAINER_NAME%% pods
+  ## @param admission.podLabels Extra labels for admission pods
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
   ##
   podLabels: {}
-  ## @param %%MAIN_OBJECT_BLOCK%%.podAnnotations Annotations for %%MAIN_CONTAINER_NAME%% pods
+  ## @param admission.podAnnotations Annotations for admission pods
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
   ##
   podAnnotations: {}
-  ## @param %%MAIN_OBJECT_BLOCK%%.podAffinityPreset Pod affinity preset. Ignored if `%%MAIN_OBJECT_BLOCK%%.affinity` is set. Allowed values: `soft` or `hard`
+  ## @param admission.podAffinityPreset Pod affinity preset. Ignored if `admission.affinity` is set. Allowed values: `soft` or `hard`
   ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
   ##
   podAffinityPreset: ""
-  ## @param %%MAIN_OBJECT_BLOCK%%.podAntiAffinityPreset Pod anti-affinity preset. Ignored if `%%MAIN_OBJECT_BLOCK%%.affinity` is set. Allowed values: `soft` or `hard`
+  ## @param admission.podAntiAffinityPreset Pod anti-affinity preset. Ignored if `admission.affinity` is set. Allowed values: `soft` or `hard`
   ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
   ##
   podAntiAffinityPreset: soft
   ## Pod Disruption Budget configuration
   ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb
-  ## @param %%MAIN_OBJECT_BLOCK%%.pdb.create Enable/disable a Pod Disruption Budget creation
-  ## @param %%MAIN_OBJECT_BLOCK%%.pdb.minAvailable Minimum number/percentage of pods that should remain scheduled
-  ## @param %%MAIN_OBJECT_BLOCK%%.pdb.maxUnavailable Maximum number/percentage of pods that may be made unavailable
+  ## @param admission.pdb.create Enable/disable a Pod Disruption Budget creation
+  ## @param admission.pdb.minAvailable Minimum number/percentage of pods that should remain scheduled
+  ## @param admission.pdb.maxUnavailable Maximum number/percentage of pods that may be made unavailable
   ##
   pdb:
     create: false
@@ -231,11 +247,11 @@ diagnosticMode:
     maxUnavailable: ""
   ## Autoscaling configuration
   ## ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
-  ## @param %%MAIN_OBJECT_BLOCK%%.autoscaling.enabled Enable autoscaling for %%MAIN_OBJECT_BLOCK%%
-  ## @param %%MAIN_OBJECT_BLOCK%%.autoscaling.minReplicas Minimum number of %%MAIN_OBJECT_BLOCK%% replicas
-  ## @param %%MAIN_OBJECT_BLOCK%%.autoscaling.maxReplicas Maximum number of %%MAIN_OBJECT_BLOCK%% replicas
-  ## @param %%MAIN_OBJECT_BLOCK%%.autoscaling.targetCPU Target CPU utilization percentage
-  ## @param %%MAIN_OBJECT_BLOCK%%.autoscaling.targetMemory Target Memory utilization percentage
+  ## @param admission.autoscaling.enabled Enable autoscaling for admission
+  ## @param admission.autoscaling.minReplicas Minimum number of admission replicas
+  ## @param admission.autoscaling.maxReplicas Maximum number of admission replicas
+  ## @param admission.autoscaling.targetCPU Target CPU utilization percentage
+  ## @param admission.autoscaling.targetMemory Target Memory utilization percentage
   ##
   autoscaling:
     enabled: false
@@ -243,37 +259,37 @@ diagnosticMode:
     maxReplicas: ""
     targetCPU: ""
     targetMemory: ""
-  ## Node %%MAIN_OBJECT_BLOCK%%.affinity preset
+  ## Node admission.affinity preset
   ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
   ##
   nodeAffinityPreset:
-    ## @param %%MAIN_OBJECT_BLOCK%%.nodeAffinityPreset.type Node affinity preset type. Ignored if `%%MAIN_OBJECT_BLOCK%%.affinity` is set. Allowed values: `soft` or `hard`
+    ## @param admission.nodeAffinityPreset.type Node affinity preset type. Ignored if `admission.affinity` is set. Allowed values: `soft` or `hard`
     ##
     type: ""
-    ## @param %%MAIN_OBJECT_BLOCK%%.nodeAffinityPreset.key Node label key to match. Ignored if `%%MAIN_OBJECT_BLOCK%%.affinity` is set
+    ## @param admission.nodeAffinityPreset.key Node label key to match. Ignored if `admission.affinity` is set
     ##
     key: ""
-    ## @param %%MAIN_OBJECT_BLOCK%%.nodeAffinityPreset.values Node label values to match. Ignored if `%%MAIN_OBJECT_BLOCK%%.affinity` is set
+    ## @param admission.nodeAffinityPreset.values Node label values to match. Ignored if `admission.affinity` is set
     ## E.g.
     ## values:
     ##   - e2e-az1
     ##   - e2e-az2
     ##
     values: []
-  ## @param %%MAIN_OBJECT_BLOCK%%.affinity Affinity for %%MAIN_CONTAINER_NAME%% pods assignment
+  ## @param admission.affinity Affinity for admission pods assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-  ## NOTE: `%%MAIN_OBJECT_BLOCK%%.podAffinityPreset`, `%%MAIN_OBJECT_BLOCK%%.podAntiAffinityPreset`, and `%%MAIN_OBJECT_BLOCK%%.nodeAffinityPreset` will be ignored when it's set
+  ## NOTE: `admission.podAffinityPreset`, `admission.podAntiAffinityPreset`, and `admission.nodeAffinityPreset` will be ignored when it's set
   ##
   affinity: {}
-  ## @param %%MAIN_OBJECT_BLOCK%%.nodeSelector Node labels for %%MAIN_CONTAINER_NAME%% pods assignment
+  ## @param admission.nodeSelector Node labels for admission pods assignment
   ## ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##
   nodeSelector: {}
-  ## @param %%MAIN_OBJECT_BLOCK%%.tolerations Tolerations for %%MAIN_CONTAINER_NAME%% pods assignment
+  ## @param admission.tolerations Tolerations for admission pods assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
   tolerations: []
-  ## @param %%MAIN_OBJECT_BLOCK%%.updateStrategy.type %%MAIN_CONTAINER_NAME%% statefulset strategy type
+  ## @param admission.updateStrategy.type admission statefulset strategy type
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
   ##
   updateStrategy:
@@ -282,50 +298,44 @@ diagnosticMode:
     ##
     type: RollingUpdate
 
-  ## ONLY FOR STATEFULSETS
-  ## @param %%MAIN_OBJECT_BLOCK%%.podManagementPolicy Statefulset Pod management policy, it needs to be Parallel to be able to complete the cluster join
-  ## Ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#pod-management-policies
-  ##
-  podManagementPolicy: OrderedReady
-
-  ## @param %%MAIN_OBJECT_BLOCK%%.priorityClassName %%MAIN_CONTAINER_NAME%% pods' priorityClassName
+  ## @param admission.priorityClassName admission pods' priorityClassName
   ##
   priorityClassName: ""
-  ## @param %%MAIN_OBJECT_BLOCK%%.topologySpreadConstraints Topology Spread Constraints for pod assignment spread across your cluster among failure-domains. Evaluated as a template
+  ## @param admission.topologySpreadConstraints Topology Spread Constraints for pod assignment spread across your cluster among failure-domains. Evaluated as a template
   ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/#spread-constraints-for-pods
   ##
   topologySpreadConstraints: []
-  ## @param %%MAIN_OBJECT_BLOCK%%.schedulerName Name of the k8s scheduler (other than default) for %%MAIN_CONTAINER_NAME%% pods
+  ## @param admission.schedulerName Name of the k8s scheduler (other than default) for admission pods
   ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
   ##
   schedulerName: ""
-  ## @param %%MAIN_OBJECT_BLOCK%%.terminationGracePeriodSeconds Seconds Redmine pod needs to terminate gracefully
+  ## @param admission.terminationGracePeriodSeconds Seconds Redmine pod needs to terminate gracefully
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
   ##
   terminationGracePeriodSeconds: ""
-  ## @param %%MAIN_OBJECT_BLOCK%%.lifecycleHooks for the %%MAIN_CONTAINER_NAME%% container(s) to automate configuration before or after startup
+  ## @param admission.lifecycleHooks for the admission container(s) to automate configuration before or after startup
   ##
   lifecycleHooks: {}
-  ## @param %%MAIN_OBJECT_BLOCK%%.extraEnvVars Array with extra environment variables to add to %%MAIN_CONTAINER_NAME%% nodes
+  ## @param admission.extraEnvVars Array with extra environment variables to add to admission nodes
   ## e.g:
   ## extraEnvVars:
   ##   - name: FOO
   ##     value: "bar"
   ##
   extraEnvVars: []
-  ## @param %%MAIN_OBJECT_BLOCK%%.extraEnvVarsCM Name of existing ConfigMap containing extra env vars for %%MAIN_CONTAINER_NAME%% nodes
+  ## @param admission.extraEnvVarsCM Name of existing ConfigMap containing extra env vars for admission nodes
   ##
   extraEnvVarsCM: ""
-  ## @param %%MAIN_OBJECT_BLOCK%%.extraEnvVarsSecret Name of existing Secret containing extra env vars for %%MAIN_CONTAINER_NAME%% nodes
+  ## @param admission.extraEnvVarsSecret Name of existing Secret containing extra env vars for admission nodes
   ##
   extraEnvVarsSecret: ""
-  ## @param %%MAIN_OBJECT_BLOCK%%.extraVolumes Optionally specify extra list of additional volumes for the %%MAIN_CONTAINER_NAME%% pod(s)
+  ## @param admission.extraVolumes Optionally specify extra list of additional volumes for the admission pod(s)
   ##
   extraVolumes: []
-  ## @param %%MAIN_OBJECT_BLOCK%%.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the %%MAIN_CONTAINER_NAME%% container(s)
+  ## @param admission.extraVolumeMounts Optionally specify extra list of additional volumeMounts for the admission container(s)
   ##
   extraVolumeMounts: []
-  ## @param %%MAIN_OBJECT_BLOCK%%.sidecars Add additional sidecar containers to the %%MAIN_CONTAINER_NAME%% pod(s)
+  ## @param admission.sidecars Add additional sidecar containers to the admission pod(s)
   ## e.g:
   ## sidecars:
   ##   - name: your-image-name
@@ -336,7 +346,7 @@ diagnosticMode:
   ##         containerPort: 1234
   ##
   sidecars: []
-  ## @param %%MAIN_OBJECT_BLOCK%%.initContainers Add additional init containers to the %%MAIN_CONTAINER_NAME%% pod(s)
+  ## @param admission.initContainers Add additional init containers to the admission pod(s)
   ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
   ## e.g:
   ## initContainers:
@@ -347,63 +357,52 @@ diagnosticMode:
   ##
   initContainers: []
 
-## %%SECONDARY_CONTAINER/POD_DESCRIPTION%%
-##
-%%SECONDARY_OBJECT_BLOCK%%:
-  %%SAME_STRUCTURE_AS_THE_MAIN_CONTAINER/POD%%
-
-## %%OTHERS_CONTAINER/POD_DESCRIPTION%%
-##
-%%OTHER_OBJECT_BLOCK%%:
-  %%SAME_STRUCTURE_AS_THE_MAIN_CONTAINER/POD%%
-
 ## @section Traffic Exposure Parameters
 ##
 
-## %%MAIN_CONTAINER_NAME%% service parameters
+## admission service parameters
 ##
 service:
-  ## @param service.type %%MAIN_CONTAINER_NAME%% service type
+  ## @param service.type admission service type
   ##
   type: LoadBalancer
-  ## @param service.ports.http %%MAIN_CONTAINER_NAME%% service HTTP port
-  ## @param service.ports.https %%MAIN_CONTAINER_NAME%% service HTTPS port
+  ## @param service.ports.http admission service HTTP port
+  ## @param service.ports.webhook admission service HTTPS port
   ##
   ports:
-    http: 80
-    https: 443
+    https: 8080
   ## Node ports to expose
   ## @param service.nodePorts.http Node port for HTTP
-  ## @param service.nodePorts.https Node port for HTTPS
+  ## @param service.nodePorts.webhook Node port for HTTPS
   ## NOTE: choose port between <30000-32767>
   ##
   nodePorts:
     http: ""
     https: ""
-  ## @param service.clusterIP %%MAIN_CONTAINER_NAME%% service Cluster IP
+  ## @param service.clusterIP admission service Cluster IP
   ## e.g.:
   ## clusterIP: None
   ##
   clusterIP: ""
-  ## @param service.loadBalancerIP %%MAIN_CONTAINER_NAME%% service Load Balancer IP
+  ## @param service.loadBalancerIP admission service Load Balancer IP
   ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-loadbalancer
   ##
   loadBalancerIP: ""
-  ## @param service.loadBalancerSourceRanges %%MAIN_CONTAINER_NAME%% service Load Balancer sources
+  ## @param service.loadBalancerSourceRanges admission service Load Balancer sources
   ## ref: https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/#restrict-access-for-loadbalancer-service
   ## e.g:
   ## loadBalancerSourceRanges:
   ##   - 10.10.10.0/24
   ##
   loadBalancerSourceRanges: []
-  ## @param service.externalTrafficPolicy %%MAIN_CONTAINER_NAME%% service external traffic policy
+  ## @param service.externalTrafficPolicy admission service external traffic policy
   ## ref http://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
   ##
   externalTrafficPolicy: Cluster
-  ## @param service.annotations Additional custom annotations for %%MAIN_CONTAINER_NAME%% service
+  ## @param service.annotations Additional custom annotations for admission service
   ##
   annotations: {}
-  ## @param service.extraPorts Extra ports to expose in %%MAIN_CONTAINER_NAME%% service (normally used with the `sidecars` value)
+  ## @param service.extraPorts Extra ports to expose in admission service (normally used with the `sidecars` value)
   ##
   extraPorts: []
   ## @param service.sessionAffinity Control where client requests go, to the same pod or round-robin
@@ -417,11 +416,11 @@ service:
   ##     timeoutSeconds: 300
   ##
   sessionAffinityConfig: {}
-## %%MAIN_CONTAINER_NAME%% ingress parameters
+## admission ingress parameters
 ## ref: http://kubernetes.io/docs/user-guide/ingress/
 ##
 ingress:
-  ## @param ingress.enabled Enable ingress record generation for %%MAIN_CONTAINER_NAME%%
+  ## @param ingress.enabled Enable ingress record generation for admission
   ##
   enabled: false
   ## @param ingress.pathType Ingress path type
@@ -432,7 +431,7 @@ ingress:
   apiVersion: ""
   ## @param ingress.hostname Default host for the ingress record
   ##
-  hostname: %%COMPONENT_NAME%%.local
+  hostname: airgap-webhook.local
   ## @param ingress.ingressClassName IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)
   ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
   ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
@@ -465,7 +464,7 @@ ingress:
   ## @param ingress.extraHosts An array with additional hostname(s) to be covered with the ingress record
   ## e.g:
   ## extraHosts:
-  ##   - name: %%COMPONENT_NAME%%.local
+  ##   - name: airgap-webhook.local
   ##     path: /
   ##
   extraHosts: []
@@ -483,8 +482,8 @@ ingress:
   ## e.g:
   ## extraTls:
   ## - hosts:
-  ##     - %%COMPONENT_NAME%%.local
-  ##   secretName: %%COMPONENT_NAME%%.local-tls
+  ##     - airgap-webhook.local
+  ##   secretName: airgap-webhook.local-tls
   ##
   extraTls: []
   ## @param ingress.secrets Custom TLS certificates as secrets
@@ -496,7 +495,7 @@ ingress:
   ## Please see README.md for more information
   ## e.g:
   ## secrets:
-  ##   - name: %%COMPONENT_NAME%%.local-tls
+  ##   - name: airgap-webhook.local-tls
   ##     key: |-
   ##       -----BEGIN RSA PRIVATE KEY-----
   ##       ...
@@ -534,7 +533,7 @@ persistence:
   enabled: true
   ## @param persistence.mountPath Path to mount the volume at.
   ##
-  mountPath: /bitnami/%%MAIN_OBJECT_BLOCK%%/data
+  mountPath: /data
   ## @param persistence.subPath The subdirectory of the volume to mount to, useful in dev environments and one PV for multiple services
   ##
   subPath: ""
@@ -592,7 +591,7 @@ volumePermissions:
   image:
     registry: docker.io
     repository: bitnami/bitnami-shell
-    tag: 11-debian-11-r%%IMAGE_REVISION%%
+    tag: "11"
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -710,8 +709,3 @@ metrics:
     ##   prometheus: my-prometheus
     ##
     selector: {}
-## %%SUBCHART_CONTAINER/POD_DESCRIPTION%%
-##
-%%SUBCHART_NAME%%:
-  enabled: false
-  %%OTHER_PARAMETERS_RELATED_TO_THIS_SUBCHART%%

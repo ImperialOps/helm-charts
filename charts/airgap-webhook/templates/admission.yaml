@@ -1,0 +1,109 @@
+{{- if .Values.admission.admissionWebhook.enabled }}
+{{- $certCert := "" -}}
+{{- $certKey := "" -}}
+{{- $caCert := "" -}}
+{{- $caKey := "" -}}
+{{- if not .Values.admission.admissionWebhook.certificate.provided }}
+{{- $cn := printf "%s.%s.svc" ( include "common.names.fullname" . ) ( include "common.names.namespace" . ) -}}
+{{- $ca := genCA "imperialops-admission-ca" 3650 -}}
+{{- $cert := genSignedCert $cn nil (list $cn) 3650 $ca -}}
+{{- $certCert = $cert.Cert -}}
+{{- $certKey = $cert.Key -}}
+{{- $caCert = $ca.Cert -}}
+{{- $caKey = $ca.Key -}}
+
+{{- $caSecret := (lookup "v1" "Secret" (include "common.names.namespace" .) (printf "%s-validation-webhook-ca-keypair" (include "common.names.fullname" .))) -}}
+{{- $certSecret := (lookup "v1" "Secret" (include "common.names.namespace" .) (printf "%s-validation-webhook-keypair" (include "common.names.fullname" .))) -}}
+{{- if $certSecret }}
+{{- $certCert = (b64dec (get $certSecret.data "tls.crt")) -}}
+{{- $certKey = (b64dec (get $certSecret.data "tls.key")) -}}
+{{- end }}
+{{- if $caSecret }}
+{{- $caCert = (b64dec (get $caSecret.data "tls.crt")) -}}
+{{- $caKey = (b64dec (get $caSecret.data "tls.key")) -}}
+{{- end }}
+{{- end }}
+kind: ValidatingWebhookConfiguration
+{{- if .Capabilities.APIVersions.Has "admissionregistration.k8s.io/v1" }}
+apiVersion: admissionregistration.k8s.io/v1
+{{- else }}
+apiVersion: admissionregistration.k8s.io/v1beta1
+{{- end }}
+metadata:
+  name: {{ template "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: airgap-webhook
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+webhooks:
+- name: airgap-webhook.images
+  failurePolicy: {{ .Values.admission.admissionWebhook.failurePolicy }}
+  sideEffects: None
+  admissionReviewVersions: ["v1beta1"]
+  rules:
+  - apiGroups:
+    - ''
+    apiVersions:
+    - '*'
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - pod
+    - job
+    - deployment
+  clientConfig:
+    {{- if not .Values.admission.admissionWebhook.certificate.provided }}
+    caBundle: {{ b64enc $caCert }}
+    {{- else }}
+    {{- if .Values.admission.admissionWebhook.certificate.caBundle }}
+    caBundle: {{ b64enc .Values.admission.admissionWebhook.certificate.caBundle }}
+    {{- end }}
+    {{- end }}
+    service:
+      name: {{ template "common.names.fullname" . }}
+      namespace: {{ template "common.names.namespace" . }}
+{{- if not .Values.admission.admissionWebhook.certificate.provided }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ template "common.names.fullname" . }}-validation-webhook-ca-keypair
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: airgap-webhook
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+type: kubernetes.io/tls
+data:
+    tls.crt: {{ b64enc $caCert  }}
+    tls.key: {{ b64enc $caKey  }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ template "common.names.fullname" . }}-validation-webhook-keypair
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: airgap-webhook
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+type: kubernetes.io/tls
+data:
+  tls.crt: {{ b64enc $certCert }}
+  tls.key: {{ b64enc $certKey }}
+{{- end }}
+{{- end }}

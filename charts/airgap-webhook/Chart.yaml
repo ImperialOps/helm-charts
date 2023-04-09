@@ -1,31 +1,26 @@
 annotations:
-  category: %%CHOOSE_ONE_FROM_CHART_CATEGORIES_FILE%%
-  licenses: Apache-2.0
+  category: application
+  licenses: MIT
 apiVersion: v2
-appVersion: %%UPSTREAM_PROJECT_VERSION%%
+appVersion: 0.0.1
 dependencies:
-  - condition: SUBCHART_NAME.enabled
-    name: SUBCHART_NAME
-    repository: https://charts.bitnami.com/bitnami
-    version: %%MAJOR_SUBCHART_VERSION_(A.X.X)%%
   - name: common
     repository: https://charts.bitnami.com/bitnami
     tags:
       - bitnami-common
     version: 2.x.x
-description: %%DESCRIPTION%%
-home: %%UPSTREAM_PROJECT_URL%%
-icon: https://bitnami.com/assets/stacks/%%IMAGE_NAME%%/img/%%IMAGE_NAME%%-stack-220x234.png
+description: keep track of all images in a cluster
+home: https://github.com/ImperialOps
 keywords:
-  - %%UPSTREAM_PROJECT_KEYWORD%%
-  - %%UPSTREAM_PROJECT_KEYWORD%%
-  - ...
+  - admission
+  - webhook
+  - airgap-webhook
 maintainers:
   - name: Bitnami
     url: https://github.com/bitnami/charts
+  - name: ImperialOps
+    url: https://github.com/ImperialOps/helm-charts
 name: airgap-webhook
 sources:
-  - https://github.com/bitnami/containers/tree/main/bitnami/%%IMAGE_NAME%%
-  - %%UPSTREAM_PROJECT_SOURCE_CODE_URL%%
-  - ...
+  - https://github.com/ImperialOps/airgap-webhook/packages
 version: 0.1.0

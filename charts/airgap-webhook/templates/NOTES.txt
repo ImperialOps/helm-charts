@@ -20,14 +20,12 @@ Access the pod you want to debug by executing
 
 In order to replicate the container startup scripts execute this command:
 
-    %%ENTRYPOINT and CMD from main container%%
+    /bin/airgap-webhook
 
 {{- else }}
 
-%%Instructions to access the application depending on the serviceType and other considerations%%
+TODO Instructions to access the application depending on the serviceType and other considerations
 
 {{- end }}
 
-{{- include "common.warnings.rollingTag" .Values.%%MAIN_OBJECT_BLOCK%%.image }}
-{{- include "common.warnings.rollingTag" .Values.%%OTHER_OBJECT_BLOCK%%.image }}
-{{- include "%%TEMPLATE_NAME%%.validateValues" . }}
+{{- include "common.warnings.rollingTag" .Values.admission.image }}
