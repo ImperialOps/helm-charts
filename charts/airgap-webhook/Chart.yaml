@@ -9,7 +9,7 @@ dependencies:
     tags:
       - bitnami-common
     version: 2.x.x
-description: keep track of all images in a cluster
+description: Keep track of all images in a cluster
 home: https://github.com/ImperialOps
 keywords:
   - admission
