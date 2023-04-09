@@ -41,7 +41,7 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 webhooks:
-- name: airgap-webhook.images
+- name: airgap-webhook.stuxcd.io
   failurePolicy: {{ .Values.admission.admissionWebhook.failurePolicy }}
   sideEffects: None
   admissionReviewVersions: ["v1beta1"]
