@@ -211,10 +211,14 @@ admission:
   existingConfigmap:
   ## @param admission.command Override default container command (useful when using custom images)
   ##
-  command: []
+  command:
+    - "/bin/airgap-webhook"
   ## @param admission.args Override default container args (useful when using custom images)
   ##
-  args: []
+  args:
+    - "--tls-enabled"
+    - "--tls-cert /etc/ssl/tls.crt"
+    - "--tls-key /etc/ssl/tls.key"
   ## @param admission.hostAliases admission pods host aliases
   ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
   ##

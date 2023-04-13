@@ -23,4 +23,4 @@ maintainers:
 name: airgap-webhook
 sources:
   - https://github.com/ImperialOps/airgap-webhook/packages
-version: 0.1.2
+version: 0.1.3
