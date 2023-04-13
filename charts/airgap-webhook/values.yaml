@@ -217,8 +217,8 @@ admission:
   ##
   args:
     - "--tls-enabled"
-    - "--tls-cert /etc/ssl/tls.crt"
-    - "--tls-key /etc/ssl/tls.key"
+    - "--tls-cert=/etc/ssl/tls.crt"
+    - "--tls-key=/etc/ssl/tls.key"
   ## @param admission.hostAliases admission pods host aliases
   ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
   ##
