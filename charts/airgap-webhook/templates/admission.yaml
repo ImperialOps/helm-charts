@@ -54,9 +54,10 @@ webhooks:
     - CREATE
     - UPDATE
     resources:
-    - pod
-    - job
-    - deployment
+    - pods
+    - jobs
+    - deployments
+    - relicasets
   clientConfig:
     {{- if not .Values.admission.admissionWebhook.certificate.provided }}
     caBundle: {{ b64enc $caCert }}
