@@ -6,6 +6,36 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.0.1
+    created: "2023-04-23T20:21:34.499424954Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 2.x.x
+    description: Keep track of all images in a cluster
+    digest: 6e0b8cb6d36d70478a4e493561930ced52cb05ed6756e420affba698cadf9f29
+    home: https://github.com/ImperialOps
+    keywords:
+    - admission
+    - webhook
+    - airgap-webhook
+    maintainers:
+    - name: Bitnami
+      url: https://github.com/bitnami/charts
+    - name: ImperialOps
+      url: https://github.com/ImperialOps/helm-charts
+    name: airgap-webhook
+    sources:
+    - https://github.com/ImperialOps/airgap-webhook/packages
+    urls:
+    - https://github.com/ImperialOps/helm-charts/releases/download/airgap-webhook-0.1.5/airgap-webhook-0.1.5.tgz
+    version: 0.1.5
+  - annotations:
+      category: application
+      licenses: MIT
+    apiVersion: v2
+    appVersion: 0.0.1
     created: "2023-04-13T15:24:45.314040816Z"
     dependencies:
     - name: common
@@ -151,4 +181,4 @@ entries:
     urls:
     - https://github.com/ImperialOps/helm-charts/releases/download/airgap-webhook-0.1.0/airgap-webhook-0.1.0.tgz
     version: 0.1.0
-generated: "2023-04-13T15:24:45.314068315Z"
+generated: "2023-04-23T20:21:34.499444754Z"
