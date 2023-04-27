@@ -69,6 +69,7 @@ webhooks:
     service:
       name: {{ template "common.names.fullname" . }}
       namespace: {{ template "common.names.namespace" . }}
+      path: "/validate"
 {{- if not .Values.admission.admissionWebhook.certificate.provided }}
 ---
 apiVersion: v1
